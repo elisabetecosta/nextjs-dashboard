@@ -1,6 +1,7 @@
 'use client';
 
 import { useSearchParams, usePathname, useRouter } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 
 export default function Search({ placeholder }: { placeholder: string }) {
@@ -9,7 +10,10 @@ export default function Search({ placeholder }: { placeholder: string }) {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  function handleSearch(term: string) {
+  // Run code 300ms after the user stops typing
+  const handleSearch = useDebouncedCallback((term) => {
+
+    console.log(`Searching... ${term}`);
 
     const params = new URLSearchParams(searchParams);
 
@@ -21,7 +25,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
 
     replace(`${pathname}?${params.toString()}`);
     console.log(term);
-  }
+  }, 300);
 
 
   return (
